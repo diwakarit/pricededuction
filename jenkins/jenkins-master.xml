@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+    <actions/>
+    <description>&lt;h3 style=&quot;color:blue&quot;&gt;Owner: &lt;a href=&quot;mailto:v-dsinha@expedia.com&quot;&gt;Cloud Acceleration Team CAT&lt;/a&gt;&lt;/h3&gt;&lt;h3 style=&quot;color:blue&quot;&gt;This job has been created by Primer&lt;/h3&gt;&lt;h4 style="color:red"&gt;For permissions to this job, please contact the job owner.&lt;/h4&gt;</description>
+    <logRotator class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>20</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>5</artifactNumToKeep>
+    </logRotator>
+    <keepDependencies>false</keepDependencies>
+    <properties>
+        <hudson.security.AuthorizationMatrixProperty>
+            <permission>hudson.model.Item.Configure:authenticated</permission>
+            <permission>hudson.scm.SCM.Tag:authenticated</permission>
+            <permission>com.synopsys.arc.jenkins.plugins.ownership.OwnershipPlugin.Jobs:authenticated</permission>
+            <permission>hudson.model.Item.ExtendedRead:authenticated</permission>
+            <permission>hudson.model.Item.Read:authenticated</permission>
+        </hudson.security.AuthorizationMatrixProperty>
+        <com.synopsys.arc.jenkins.plugins.ownership.jobs.JobOwnerJobProperty plugin="ownership@0.6">
+            <ownership>
+                <ownershipEnabled>true</ownershipEnabled>
+                <primaryOwnerId>authenticated</primaryOwnerId>
+                <coownersIds class="sorted-set"/>
+            </ownership>
+        </com.synopsys.arc.jenkins.plugins.ownership.jobs.JobOwnerJobProperty>
+        <de.pellepelster.jenkins.walldisplay.WallDisplayJobProperty plugin="jenkinswalldisplay@0.6.26"/>
+        <jenkins.advancedqueue.AdvancedQueueSorterJobProperty plugin="PrioritySorter@2.6">
+            <useJobPriority>false</useJobPriority>
+            <priority>-1</priority>
+        </jenkins.advancedqueue.AdvancedQueueSorterJobProperty>
+    </properties>
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.1">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+            <hudson.plugins.git.UserRemoteConfig>
+                <url>git@github.expedia.biz:Kumo/pricededuction.git</url>
+            </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+            <hudson.plugins.git.BranchSpec>
+                <name>refs/heads/master</name>
+            </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions>
+            <hudson.plugins.git.extensions.impl.UserExclusion>
+                <excludedUsers>ewe-jenkins
+                    ewbldsup
+                    jenkins
+                    *jenkins*</excludedUsers>
+            </hudson.plugins.git.extensions.impl.UserExclusion>
+            <hudson.plugins.git.extensions.impl.PerBuildTag/>
+            <hudson.plugins.git.extensions.impl.LocalBranch>
+                <localBranch>master</localBranch>
+            </hudson.plugins.git.extensions.impl.LocalBranch>
+        </extensions>
+    </scm>
+    <assignedNode>amazon</assignedNode>
+    <canRoam>false</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <jdk>jdk-8u102</jdk>
+    <authToken>masterBuild</authToken>
+    <triggers>
+        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.8">
+            <spec></spec>
+        </com.cloudbees.jenkins.GitHubPushTrigger>
+
+    </triggers>
+    <concurrentBuild>false</concurrentBuild>
+    <builders>
+        <hudson.tasks.Maven>
+            <targets>clean dependency:tree install -DoutputFile=target/dependency.txt -DchangeNumber=$GIT_COMMIT -DbuildType=release -DbuildNumber=$BUILD_NUMBER -DbuildBranch=$GIT_BRANCH -DdepotInfo=git@github.expedia.biz:Kumo/pricededuction.git -DscmCommentPrefix=&apos;$JOB_NAME $BUILD_NUMBER [maven-release-plugin]&apos;</targets>
+            <mavenName>maven-3.3.9</mavenName>
+            <usePrivateRepository>false</usePrivateRepository>
+            <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+            <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+        </hudson.tasks.Maven>
+        <com.cloudbees.dockerpublish.DockerBuilder plugin="docker-build-publish@1.1-SNAPSHOT">
+            <server plugin="docker-commons@1.0"/>
+            <registry plugin="docker-commons@1.0">
+                <url>https://kumo-docker-release-local.artylab.expedia.biz</url>
+                <credentialsId>59a854b7-17be-43cb-89da-886f991067a6</credentialsId>
+            </registry>
+            <repoName>library/pricededuction</repoName>
+            <noCache>false</noCache>
+            <forcePull>false</forcePull>
+            <dockerfilePath/>
+            <skipBuild>false</skipBuild>
+            <skipDecorate>false</skipDecorate>
+            <repoTag>$GIT_COMMIT</repoTag>
+            <retryBuild>5</retryBuild>
+            <skipPush>false</skipPush>
+            <createFingerprint>false</createFingerprint>
+            <skipTagLatest>true</skipTagLatest>
+        </com.cloudbees.dockerpublish.DockerBuilder>
+        <hudson.tasks.Shell>
+            <command>
+                rm -rf primer-scripts;
+                mkdir primer-scripts;
+                s3cmd --verbose get s3://ewe-softwares/builds/git@ewegithub.sb.karmalab.net:EWE/primer-scripts.git/primer-scripts.tar.gz primer-scripts/;
+                tar -xzvf primer-scripts/primer-scripts.tar.gz -C primer-scripts/;
+                bash ./primer-scripts/run_primerscript.sh;
+            </command>
+        </hudson.tasks.Shell>
+        <hudson.tasks.Shell>
+            <command>#!/bin/bash -l
+                #Comma-separeted list of files (no space in between) to upload to S3.
+                FILES_TO_UPLOAD=target/pricededuction.war,target/dependency.txt
+                source "/usr/local/rvm/scripts/rvm"
+                rvm use 2.4.0
+                echo "Download upload_build_artifact package"
+                aws --region us-west-2 s3api get-object --bucket nimbus-test-085881308644-build-artifacts --key upload_build_artifacts/upload_build_artifacts.tar.gz upload_build_artifacts.tar.gz
+                if [ -d ./upload_build_artifacts ]; then rm -rf ./upload_build_artifacts; fi
+                mkdir ./upload_build_artifacts &amp;&amp; tar -xzvf upload_build_artifacts.tar.gz -C ./upload_build_artifacts/ &amp;&amp; cd ./upload_build_artifacts
+                gem install bundler
+                bundle install --without test
+                echo "Executing: ./bin/upload_artifacts_to_s3.rb --role-name pricededuction --version $GIT_COMMIT  -s ${FILES_TO_UPLOAD}"
+                ./bin/upload_artifacts_to_s3.rb --role-name pricededuction --version $GIT_COMMIT  -s ${FILES_TO_UPLOAD}
+            </command>
+        </hudson.tasks.Shell>
+    </builders>
+    <publishers>
+        <jenkins.plugins.slack.SlackNotifier plugin="slack@2.3">
+            <baseUrl/>
+            <teamDomain/>
+            <authToken/>
+            <authTokenCredentialId/>
+            <botUser>false</botUser>
+            <room></room>
+            <startNotification>false</startNotification>
+            <notifySuccess>false</notifySuccess>
+            <notifyAborted>false</notifyAborted>
+            <notifyNotBuilt>false</notifyNotBuilt>
+            <notifyUnstable>false</notifyUnstable>
+            <notifyRegression>false</notifyRegression>
+            <notifyFailure>true</notifyFailure>
+            <notifyBackToNormal>true</notifyBackToNormal>
+            <notifyRepeatedFailure>false</notifyRepeatedFailure>
+            <includeTestSummary>false</includeTestSummary>
+            <includeFailedTests>false</includeFailedTests>
+            <commitInfoChoice>NONE</commitInfoChoice>
+            <includeCustomMessage>false</includeCustomMessage>
+            <customMessage/>
+        </jenkins.plugins.slack.SlackNotifier>
+    </publishers>
+    <buildWrappers>
+        <hudson.plugins.build__timeout.BuildTimeoutWrapper plugin="build-timeout@1.14">
+            <strategy class="hudson.plugins.build_timeout.impl.AbsoluteTimeOutStrategy">
+                <timeoutMinutes>60</timeoutMinutes>
+            </strategy>
+            <operationList>
+                <hudson.plugins.build__timeout.operations.AbortOperation/>
+            </operationList>
+        </hudson.plugins.build__timeout.BuildTimeoutWrapper>
+        <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.5.12"/>
+    </buildWrappers>
+</project>

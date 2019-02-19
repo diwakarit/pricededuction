@@ -1,2 +1,1 @@
-# pricededuction
-This is a repository for the application: pricededuction
+TODO: Describe your app here. This information will appear in Git

@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.8.RELEASE</version>
+    </parent>
+    <artifactId>pricededuction</artifactId>
+    <groupId>com.expedia.www</groupId>
+    <packaging>war</packaging>
+    <name>pricededuction</name>
+    <description>pricededuction SpringBoot application</description>
+    <version>1.0-SNAPSHOT</version>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.jdk.version>${java.version}</project.jdk.version>
+        <project.sourceEncoding>UTF-8</project.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <run.application.home>.</run.application.home>
+        <run.application.name>${project.name}</run.application.name>
+        <run.application.environment>dev</run.application.environment>
+        <run.spring.profiles.active>${run.application.environment}</run.spring.profiles.active>
+
+        <start-class>com.expedia.www.pricededuction.Starter</start-class>
+
+        <!-- Following properties are for release. -->
+        <buildType>sandbox</buildType>
+        <buildNumber>0</buildNumber>
+        <buildBranch>local</buildBranch>
+        <changeNumber>local</changeNumber>
+        <depotInfo>none</depotInfo>
+        <buildTime>${maven.build.timestamp}</buildTime>
+
+        <platform.bom.version>0.39.0</platform.bom.version>
+
+        <metrics-spring.version>3.1.3</metrics-spring.version>
+        <springfox-swagger2.version>2.7.0</springfox-swagger2.version>
+        <json-sanitizer.version>1.1</json-sanitizer.version>
+        <lombok.version>1.16.18</lombok.version>
+
+        <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
+        <findbugs.include.filter.location>buildtools/findbugs/include.xml</findbugs.include.filter.location>
+        <findbugs.exclude.filter.location>buildtools/findbugs/exclude.xml</findbugs.exclude.filter.location>
+        <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
+        <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+
+        <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
+        <surefire.version>2.19.1</surefire.version>
+        <failsafe.version>2.19.1</failsafe.version>
+
+        <pmd.version>6.8.0</pmd.version>
+        <pmd.ruleset.location>buildtools/pmd/ruleset_local.xml</pmd.ruleset.location>
+        <pmd.skip>false</pmd.skip>
+        <checkstyle.version>2.17</checkstyle.version>
+        <!-- spring boot -->
+        <debug.port>5000</debug.port>
+        <run.jvmArguments>-Dspring.profiles.active=${run.spring.profiles.active}
+            -Dapplication.home=${run.application.home} -Dapplication.name=${run.application.name}
+            -Dapplication.environment=${run.application.environment} -Xdebug
+            -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug.port}
+        </run.jvmArguments>
+    </properties>
+
+    <!--
+      For example repository settings which can be copied to your local ~/.m2/settings.xml, see:
+      https://ewegithub.sb.karmalab.net/EWE/platform/blob/master/expedia-maven-settings.xml
+    -->
+
+    <!--
+        Note that Nexus will be replaced by Artifactory in the coming months;
+        see https://confluence.expedia.biz/x/wBvsNQ for a guide to migrating,
+        including configuring Maven for Artifactory.
+    -->
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Internal Releases</name>
+            <url>http://nexuslab.alm/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Expedia</name>
+            <url>http://nexuslab.alm/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Edgware.SR5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.expedia.www.platform</groupId>
+                <artifactId>platform-bom-primefull</artifactId>
+                <version>${platform.bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- Platform Dependencies -->
+        <dependency>
+            <groupId>com.expedia.www.platform</groupId>
+            <artifactId>platform-monitoring</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.expedia.www.platform</groupId>
+            <artifactId>platform-diagnostics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.expedia.www.platform</groupId>
+            <artifactId>platform-isactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.expedia.www.platform</groupId>
+            <artifactId>platform-spring-vault</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-vault-config</artifactId>
+        </dependency>
+
+        <!-- Spring Dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+
+        <!-- Metrics Dependencies -->
+        <dependency>
+            <groupId>com.ryantenney.metrics</groupId>
+            <artifactId>metrics-spring</artifactId>
+            <version>${metrics-spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-servlet</artifactId>
+            <version>${dropwizard-metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-servlets</artifactId>
+            <version>${dropwizard-metrics.version}</version>
+        </dependency>
+
+        <!-- Swagger Dependencies -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Other Dependencies -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mikesamuel</groupId>
+            <artifactId>json-sanitizer</artifactId>
+            <version>${json-sanitizer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <version>${maven-jxr-plugin.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules/>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <message>.
+
+                                        *** ERROR: Detected Maven version ${maven.version}, We need Maven 3.3.9 or
+                                        higher ***
+
+                                        .
+                                    </message>
+                                    <version>[3.3.9,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <message>.
+
+                                        *** ERROR: Detected JDK version ${java.version}, We need JDK
+                                        ${project.jdk.version} or higher ***
+
+                                        .
+                                    </message>
+                                    <version>${project.jdk.version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${project.jdk.version}</source>
+                    <target>${project.jdk.version}</target>
+                    <encoding>UTF-8</encoding>
+
+                </configuration>
+                <version>${maven-compiler-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifestEntries>
+                            <Application-Name>${project.name}</Application-Name>
+                            <Application-Version>${project.version}</Application-Version>
+                            <Application-Description>${project.description}</Application-Description>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Version>${changeNumber}</Implementation-Version>
+                            <Implementation-Vendor>Expedia</Implementation-Vendor>
+                            <Built-By>${user.name}</Built-By>
+                            <Build-Jdk>${java.version}</Build-Jdk>
+                            <Build-Time>${buildTime}</Build-Time>
+                            <Build>${buildType}</Build>
+                            <Branch>${buildBranch}</Branch>
+                            <Depot>${depotInfo}</Depot>
+                            <mainClass>${start-class}</mainClass>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <application.name>${run.application.name}</application.name>
+                        <application.home>${run.application.home}</application.home>
+                        <application.environment>${run.application.environment}</application.environment>
+                        <spring.profiles.active>${run.application.environment}</spring.profiles.active>
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${failsafe.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.expedia.www.platform</groupId>
+                        <artifactId>platform-build-tools</artifactId>
+                        <version>${platform.bom.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <failOnError>true</failOnError>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <xmlOutput>true</xmlOutput>
+                    <excludeFilterFile>${findbugs.exclude.filter.location}</excludeFilterFile>
+                    <includeFilterFile>${findbugs.include.filter.location}</includeFilterFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.expedia.www.platform</groupId>
+                        <artifactId>platform-build-tools</artifactId>
+                        <version>${platform.bom.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetJdk>${project.jdk.version}</targetJdk>
+                    <includeTests>true</includeTests>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources/annotations</excludeRoot>
+                    </excludeRoots>
+                    <skip>${pmd.skip}</skip>
+                    <sourceEncoding>${project.sourceEncoding}</sourceEncoding>
+                    <rulesets>
+                        <ruleset>${pmd.ruleset.location}</ruleset>
+                    </rulesets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>cpd-report</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+                <configuration>
+                    <configLocation>buildtools/checkstyle/google_checks_modified.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <violationSeverity>warning</violationSeverity>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven-jxr-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

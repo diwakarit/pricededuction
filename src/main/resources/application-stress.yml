@@ -1,0 +1,15 @@
+---
+# Logging & Tomcat
+server:
+  tomcat:
+    max-threads: 100
+
+# Monitoring
+monitoringAgent:
+  statsd:
+    hostname: "statsd-stress.us-west-2.test.expedia.com"
+    port: 8125
+
+# Additional Config
+test:
+  helloMsg: "Hello Stress user"

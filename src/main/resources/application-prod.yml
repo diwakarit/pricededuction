@@ -1,0 +1,14 @@
+# Logging & Tomcat
+server:
+  tomcat:
+    max-threads: 20
+
+# Monitoring
+monitoringAgent:
+  statsd:
+    hostname: "statsd"
+    port: 8125
+
+# Additional Config
+test:
+  helloMsg: "Hello Prod user"

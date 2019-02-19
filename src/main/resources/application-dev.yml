@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  ssl:
+    enabled: false
+
+# Monitoring
+monitoringAgent:
+  statsd:
+    hostname: "statsd-dev"
+    port: 8125
+
+# Spring Actuator Endpoints
+endpoints:
+  enabled: true
+
+# Additional Config
+test:
+  helloMsg: "Hello dev"
+

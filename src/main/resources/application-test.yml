@@ -1,0 +1,14 @@
+---
+# Spring Actuator Endpoints
+endpoints:
+  enabled: true
+
+# Monitoring
+monitoringAgent:
+  statsd:
+    hostname: "statsd"
+    port: 8125
+
+# Additional Config
+test:
+  helloMsg: "Hello Test user"

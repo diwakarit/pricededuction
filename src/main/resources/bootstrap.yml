@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: @project.name@
+
+  cloud:
+    vault:
+      enabled: true
+      uri: ${VAULT_ADDR:https://ewe-vault.test.expedia.com:8200}
+      token: ${vault.token:NA}
+      generic:
+        # Don't change this configuration. It is due to how vault is used inside Expedia. We are not able to have a generic context accessible for any apps
+        default-context: ${spring.application.name}
+        application-name: answer-service
+  profiles:
+    active: dev

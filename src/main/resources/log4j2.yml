@@ -1,0 +1,90 @@
+configuration:
+  name: Default
+  debug: false
+
+  properties:
+    property:
+    - name: log-path
+      value: ${sys:application.home}/logs
+    - name: archive-path
+      value: ${sys:application.home}/logs/archive
+
+  appenders:
+    Console:
+      name: consoleAppender
+      PatternLayout:
+        pattern: '%d [%.30t] %c %p %m%n'
+      target: SYSTEM_OUT
+      ThresholdFilter:
+        level: DEBUG
+
+    RollingFile:
+      - name: fileAppender
+        DefaultRolloverStrategy:
+          max: 100
+        PatternLayout:
+          pattern: 'DateTime=%d{ISO8601}{GMT} Env=${sys:application.environment} Level=%p Logger=%c Message=%m%n'
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 1000 KB
+        fileName: ${log-path}/pricededuction.txt
+        filePattern: ${archive-path}/pricededuction.txt.%d{yyyy-MM-dd-hh-mm}.gz
+        append: false
+
+      - name: errorAppender
+        DefaultRolloverStrategy:
+          max: 100
+        PatternLayout:
+          pattern: 'DateTime=%d{ISO8601}{GMT} Env=${sys:application.environment} Level=%p Logger=%c Message=%m%n'
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 1000 KB
+        fileName: ${log-path}/errors.txt
+        filePattern: ${archive-path}/errors.txt.%d{yyyy-MM-dd-hh-mm}.gz
+        append: false
+        ThresholdFilter:
+          level: ERROR
+
+    Async:
+      - name: devAppender
+        appender-ref:
+          level: DEBUG
+          ref: fileAppender
+      - name: testAppender
+        appender-ref:
+          level: INFO
+          ref: fileAppender
+      - name: intAppender
+        appender-ref:
+          level: INFO
+          ref: fileAppender
+      - name: stressAppender
+        appender-ref:
+          level: ERROR
+          ref: fileAppender
+      - name: prodAppender
+        appender-ref:
+          level: ERROR
+          ref: fileAppender
+
+  loggers:
+    logger:
+      name: org.springframework
+      level: INFO
+      additivity: false
+      appender-ref:
+        - ref: consoleAppender
+        - ref: ${sys:application.environment}Appender
+    logger:
+      name: com.mangofactory.swagger
+      level: ERROR
+      additivity: false
+      appender-ref:
+        - ref: consoleAppender
+        - ref: ${sys:application.environment}Appender
+    root:
+      level: INFO
+      appenderRef:
+        - ref: consoleAppender
+        - ref: errorAppender
+        - ref: ${sys:application.environment}Appender
