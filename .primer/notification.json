@@ -1,0 +1,14 @@
+{
+  "methods": [
+    {
+      "type": "email",
+      "location": "v-dsinha@expedia.com",
+      "severity": [
+        "info",
+        "error",
+        "warn"
+      ]
+    }
+  ]
+}
+

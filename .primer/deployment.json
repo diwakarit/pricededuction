@@ -1,0 +1,30 @@
+{
+  "global": {
+    "isactive_support": {
+      "enabled": true,
+      "file": "/opt/pricededuction/active.txt"
+    },
+    "loadbalancer": {
+      "https_enabled": true,
+      "http_enabled": false 
+    },
+    "app_ssl_port": 8080,
+    "app_ssl_protocol": "HTTP",
+    "app_name": "pricededuction",
+    "source_repo": "git@github.expedia.biz:Kumo/pricededuction.git",
+    "team": "Cloud Acceleration Team CAT",
+    "portfolio": "EWE Primer",
+    "product_area": "Shared Platform and Operations",
+    "notify": {
+      "email": {
+        "addresses": [
+          "v-dsinha@expedia.com"
+        ]
+      },
+      "hipchat": {
+        "room": "Primer Notifications"
+      }
+    },
+    "ssl_negotiation_policy": "ELBSecurityPolicy-TLS-1-2-2017-01"
+  }
+}
