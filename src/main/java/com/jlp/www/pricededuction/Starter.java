@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction;
+package com.jlp.www.pricededuction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

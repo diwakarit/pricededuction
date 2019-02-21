@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.exception;
+package com.jlp.www.pricededuction.exception;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.Ordered;
@@ -40,7 +40,7 @@ public class ExceptionResolver {
    * This exception handler handles validation errors from Spring when using the @Valid or @Validation annotations.
    * @param request {@link javax.servlet.http.HttpServletRequest}
    * @param ex {@link org.springframework.web.bind.MethodArgumentNotValidException}
-   * @return {@link com.expedia.www.pricededuction.exception.ErrorResponse}
+   * @return {@link ErrorResponse}
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)

@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.controller;
+package com.jlp.www.pricededuction.controller;
 
 import io.swagger.annotations.ApiModelProperty;
 

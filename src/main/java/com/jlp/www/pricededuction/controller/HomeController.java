@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.controller;
+package com.jlp.www.pricededuction.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

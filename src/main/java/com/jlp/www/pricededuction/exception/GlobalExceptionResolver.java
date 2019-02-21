@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.exception;
+package com.jlp.www.pricededuction.exception;
 
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;

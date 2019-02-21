@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.init;
+package com.jlp.www.pricededuction.init;
 
 import static com.google.common.base.Predicates.or;
 

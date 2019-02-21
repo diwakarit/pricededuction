@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.exception;
+package com.jlp.www.pricededuction.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

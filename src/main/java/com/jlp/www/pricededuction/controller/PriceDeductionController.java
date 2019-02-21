@@ -1,7 +1,7 @@
 package com.jlp.www.pricededuction.controller;
 
 import com.jlp.www.pricededuction.service.ReadJsonDataService;
-import com.jlp.www.pricededuction.utililty.BasicColorCode;
+import com.jlp.www.pricededuction.utililty.UtilityFile;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.json.JSONArray;
@@ -75,7 +75,7 @@ public class PriceDeductionController {
 
                                 if (strColor != null) {
                                     colorSwatchesObj.put("color", strColor);
-                                    colorSwatchesObj.put("rgbcolor", BasicColorCode.basicColorToRGB().get(basicColor));
+                                    colorSwatchesObj.put("rgbcolor", UtilityFile.basicColorToRGB().get(basicColor));
                                 }
                                 if (strSkuId != null) {
                                     colorSwatchesObj.put("skuId", strSkuId);
@@ -92,7 +92,16 @@ public class PriceDeductionController {
                                 String val3 = resobj.optString(s3);
 
                                 if (s3.equals("now")) {
-                                    now = val3;
+                                    Map<String,String> m1 =null;
+                                    if(val3.startsWith("{")) {
+                                        m1 = UtilityFile.convertJsonToMap(val3);
+                                        if (m1 != null) {
+                                            String to = m1.get("to");
+                                            now=to;
+                                        }
+                                    }else{
+                                        now = val3;
+                                    }
                                 }
                                 if (s3.equals("was") && !val3.equals("")) {
                                     m.put("colorSwatches", colorList);

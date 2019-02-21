@@ -1,4 +1,4 @@
-package com.expedia.www.pricededuction.exception;
+package com.jlp.www.pricededuction.exception;
 
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class ErrorResolver implements ErrorController {
    * @param request  {@link javax.servlet.http.HttpServletRequest}
    * @param response {@link javax.servlet.http.HttpServletResponse}
    * @return {@link org.springframework.http.ResponseEntity}
-   *     with {@link com.expedia.www.pricededuction.exception.ErrorResponse}
+   *     with {@link ErrorResponse}
    */
   @RequestMapping(value = ERROR_PATH)
   @ResponseBody
