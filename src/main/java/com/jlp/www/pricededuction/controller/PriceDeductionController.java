@@ -1,18 +1,12 @@
 package com.jlp.www.pricededuction.controller;
 
-import com.google.gson.Gson;
 import com.jlp.www.pricededuction.service.ReadJsonDataService;
 import com.jlp.www.pricededuction.utililty.BasicColorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +20,6 @@ import java.util.*;
  */
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
 @Api(tags = "Internal Single Step APIs")
 @RestController
 public class PriceDeductionController {
@@ -50,26 +41,26 @@ public class PriceDeductionController {
 
         try {
             JSONObject json = readJsonDataService.readJsonData(url);
-            JSONArray jar1 = null;
+            JSONArray jsonArray = null;
 
             if (json != null) {
-                jar1 = json.getJSONArray("products");
+                jsonArray = json.getJSONArray("products");
 
-                List userList = new ArrayList();
+                List prodList = new ArrayList();
                 List colorList = null;
 
-                for (int jja = 0; jja < jar1.length(); jja++) {
-                    JSONObject j1 = jar1.getJSONObject(jja);
+                for (int ja = 0; ja < jsonArray.length(); ja++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(ja);
                     HashMap m = new HashMap();
                     Map<String, Object> colorSwatchesObj = null;
-                    Map<String, Object> priceLabel = new HashMap<String, Object>();
+                    Map<String, Object> priceLabel = new HashMap<>();
                     List priceLabelList = new ArrayList();
 
                     colorList = new ArrayList();
-                    Iterator it1 = j1.keys();
+                    Iterator it1 = jsonObject.keys();
                     while (it1.hasNext()) {
                         String s1 = (String) it1.next();
-                        String val = j1.optString(s1);
+                        String val = jsonObject.optString(s1);
 
                         if (s1.equals("productId")) {
                             m.put("productId", val);
@@ -79,10 +70,7 @@ public class PriceDeductionController {
                             m.put("title", val);
                         }
 
-
                         if (s1.equals("colorSwatches") && val.length() > 3) {
-
-                            colorSwatchesObj = new HashMap<String, Object>();
                             JSONArray jsonarray = new JSONArray(val);
 
                             for (int i = 0; i < jsonarray.length(); i++) {
@@ -93,7 +81,6 @@ public class PriceDeductionController {
                                 String basicColor = jsonobject.getString("basicColor");
 
                                 if (strColor != null) {
-
                                     colorSwatchesObj.put("color", strColor);
                                     colorSwatchesObj.put("rgbcolor", BasicColorCode.basicColorToRGB().get(basicColor));
                                 }
@@ -105,7 +92,7 @@ public class PriceDeductionController {
                         }
 
                         if (s1.equals("price")) {
-                            String now ="";
+                            String now = "";
                             JSONObject resobj = new JSONObject(val);
                             Iterator it3 = resobj.keys();
                             while (it3.hasNext()) {
@@ -119,7 +106,7 @@ public class PriceDeductionController {
                                 if (s3.equals("was") && !val3.equals("")) {
                                     m.put("colorSwatches", colorList);
 
-                                    priceLabel.put("showWasNow","Was £"+val3+","+" now £"+now);
+                                    priceLabel.put("showWasNow", "Was £" + val3 + "," + " now £" + now);
 
                                     // Since query param is not available
                                     /*priceLabel.put("showWasThenNow","");
@@ -128,21 +115,21 @@ public class PriceDeductionController {
 
                                     priceLabelList.add(priceLabel);
 
-                                    m.put("nowPrice","");
-                                    m.put("priceLabel",priceLabelList);
+                                    m.put("nowPrice", now);
+                                    m.put("priceLabel", priceLabelList);
 
                                     m.put(s1, val3);
-                                    userList.add(m);
+                                    prodList.add(m);
                                 }
                             }
                         }
                     }
                 }
-                responseObj.put("products", userList);
+                responseObj.put("products", prodList);
                 System.out.println(new JSONObject(responseObj));
                 msg = new JSONObject(responseObj).toString();
 
-            }else{
+            } else {
                 msg = "FAIL DURING URL CALL";
             }
         } catch (Exception e) {
