@@ -23,7 +23,6 @@ import java.util.*;
 @Api(tags = "Internal Single Step APIs")
 @RestController
 public class PriceDeductionController {
-
     @Autowired
     private ReadJsonDataService readJsonDataService;
 
@@ -115,13 +114,11 @@ public class PriceDeductionController {
                 responseObj.put("products", prodList);
                 System.out.println(new JSONObject(responseObj));
                 msg = new JSONObject(responseObj).toString();
-
             } else {
                 msg = "FAIL DURING URL CALL";
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
