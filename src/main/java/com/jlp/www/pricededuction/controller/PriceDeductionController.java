@@ -121,10 +121,11 @@ public class PriceDeductionController {
 
                                     priceLabel.put("showWasNow","Was £"+val3+","+" now £"+now);
 
-                                    // Since query param not available
+                                    // Since query param is not available
                                     /*priceLabel.put("showWasThenNow","");
                                     priceLabel.put("ShowPercDscount","");
-*/
+                                     */
+
                                     priceLabelList.add(priceLabel);
 
                                     m.put("nowPrice","");
@@ -139,7 +140,7 @@ public class PriceDeductionController {
                 }
                 responseObj.put("products", userList);
                 System.out.println(new JSONObject(responseObj));
-                msg = responseObj.toString();
+                msg = new JSONObject(responseObj).toString();
 
             }else{
                 msg = "FAIL DURING URL CALL";
