@@ -38,24 +38,20 @@ public class PriceDeductionController {
         String url = "https://jl-nonprod-syst.apigee.net/v1/categories/600001506/products?key=2ALHCAAs6ikGRBoy6eTHA58RaG097Fma";
         Map<String, Object> responseObj = new HashMap<String, Object>();
         String msg = "";
-
         try {
             JSONObject json = readJsonDataService.readJsonData(url);
             JSONArray jsonArray = null;
 
             if (json != null) {
                 jsonArray = json.getJSONArray("products");
-
                 List prodList = new ArrayList();
                 List colorList = null;
-
                 for (int ja = 0; ja < jsonArray.length(); ja++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(ja);
                     HashMap m = new HashMap();
                     Map<String, Object> colorSwatchesObj = null;
                     Map<String, Object> priceLabel = new HashMap<>();
                     List priceLabelList = new ArrayList();
-
                     colorList = new ArrayList();
                     Iterator it1 = jsonObject.keys();
                     while (it1.hasNext()) {
@@ -65,11 +61,9 @@ public class PriceDeductionController {
                         if (s1.equals("productId")) {
                             m.put("productId", val);
                         }
-
                         if (s1.equals("title")) {
                             m.put("title", val);
                         }
-
                         if (s1.equals("colorSwatches") && val.length() > 3) {
                             JSONArray jsonarray = new JSONArray(val);
 
@@ -90,7 +84,6 @@ public class PriceDeductionController {
                                 colorList.add(colorSwatchesObj);
                             }
                         }
-
                         if (s1.equals("price")) {
                             String now = "";
                             JSONObject resobj = new JSONObject(val);
@@ -102,22 +95,16 @@ public class PriceDeductionController {
                                 if (s3.equals("now")) {
                                     now = val3;
                                 }
-
                                 if (s3.equals("was") && !val3.equals("")) {
                                     m.put("colorSwatches", colorList);
-
                                     priceLabel.put("showWasNow", "Was £" + val3 + "," + " now £" + now);
-
                                     // Since query param is not available
                                     /*priceLabel.put("showWasThenNow","");
                                     priceLabel.put("ShowPercDscount","");
                                      */
-
                                     priceLabelList.add(priceLabel);
-
                                     m.put("nowPrice", now);
                                     m.put("priceLabel", priceLabelList);
-
                                     m.put(s1, val3);
                                     prodList.add(m);
                                 }
