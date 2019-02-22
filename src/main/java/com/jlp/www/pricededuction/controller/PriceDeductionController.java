@@ -1,5 +1,9 @@
 package com.jlp.www.pricededuction.controller;
 
+import com.google.gson.Gson;
+import com.jlp.www.pricededuction.Bean.ColorSwatches;
+import com.jlp.www.pricededuction.Bean.PriceLabel;
+import com.jlp.www.pricededuction.Bean.Products;
 import com.jlp.www.pricededuction.service.ReadJsonDataService;
 import com.jlp.www.pricededuction.utililty.UtilityFile;
 import io.swagger.annotations.Api;
@@ -46,10 +50,11 @@ public class PriceDeductionController {
                 List prodList = new ArrayList();
                 List colorList = null;
                 for (int ja = 0; ja < jsonArray.length(); ja++) {
+                    Products prod = new Products();
+                    PriceLabel pLabel = new PriceLabel();
+
                     JSONObject jsonObject = jsonArray.getJSONObject(ja);
                     HashMap m = new HashMap();
-                    Map<String, Object> colorSwatchesObj = null;
-                    Map<String, Object> priceLabel = new HashMap<>();
                     List priceLabelList = new ArrayList();
                     colorList = new ArrayList();
                     Iterator it1 = jsonObject.keys();
@@ -58,29 +63,30 @@ public class PriceDeductionController {
                         String val = jsonObject.optString(key);
 
                         if (key.equals("productId")) {
-                            m.put("productId", val);
+                            prod.setProductId(val);
                         }
                         if (key.equals("title")) {
-                            m.put("title", val);
+                            prod.setTitle(val);
                         }
                         if (key.equals("colorSwatches") && val.length() > 3) {
                             JSONArray jsonarray = new JSONArray(val);
 
                             for (int i = 0; i < jsonarray.length(); i++) {
-                                colorSwatchesObj = new HashMap<String, Object>();
+                                ColorSwatches swatches = new ColorSwatches();
+
                                 JSONObject jsonobject = jsonarray.getJSONObject(i);
                                 String strSkuId = jsonobject.getString("skuId");
                                 String strColor = jsonobject.getString("color");
                                 String basicColor = jsonobject.getString("basicColor");
 
                                 if (strColor != null) {
-                                    colorSwatchesObj.put("color", strColor);
-                                    colorSwatchesObj.put("rgbcolor", UtilityFile.basicColorToRGB().get(basicColor));
+                                    swatches.setColor(strColor);
+                                    swatches.setRgbcolor(UtilityFile.basicColorToRGB().get(basicColor));
                                 }
                                 if (strSkuId != null) {
-                                    colorSwatchesObj.put("skuId", strSkuId);
+                                    swatches.setSkuId(strSkuId);
                                 }
-                                colorList.add(colorSwatchesObj);
+                                colorList.add(swatches);
                             }
                         }
                         if (key.equals("price")) {
@@ -104,25 +110,29 @@ public class PriceDeductionController {
                                     }
                                 }
                                 if (pricekey.equals("was") && !priceval.equals("")) {
-                                    m.put("colorSwatches", colorList);
-                                    priceLabel.put("showWasNow", "Was £" + priceval + "," + " now £" + now);
+
+                                    prod.setColorSwatches(colorList);
+                                    pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
+
                                     // Since query param is not available
                                     /*priceLabel.put("showWasThenNow","");
                                     priceLabel.put("ShowPercDscount","");
                                      */
-                                    priceLabelList.add(priceLabel);
-                                    m.put("nowPrice", now);
-                                    m.put("priceLabel", priceLabelList);
-                                    m.put(key, priceval);
-                                    prodList.add(m);
+
+                                    priceLabelList.add(pLabel);
+                                    prod.setNowPrice(now);
+                                    prod.setPriceLabel(priceLabelList);
+                                    prod.setPrice(priceval);
+                                    prodList.add(prod);
                                 }
                             }
                         }
                     }
                 }
                 responseObj.put("products", prodList);
-                System.out.println(new JSONObject(responseObj));
-                msg = new JSONObject(responseObj).toString();
+                System.out.println(new Gson().toJson(responseObj));
+                msg = new Gson().toJson(responseObj);
+
             } else {
                 msg = "FAIL DURING URL CALL";
             }
