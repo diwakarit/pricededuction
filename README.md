@@ -39,7 +39,9 @@ or:
 
     mvn exec:exec
 
-Open a browser and visit [http://localhost:8080/](http://localhost:8080/) for Swagger documentation, or 
+Open a browser and visit [http://localhost:8080/swagger-ui.html#/](http://localhost:8080/swagger-ui.html#/) for Swagger documentation, or 
 [http://localhost:8080/api/hello](http://localhost:8080/api/hello) for the sample API.
+
+API to obtain a list of products: http://localhost:8080/api/readjson
 
 
