@@ -88,24 +88,24 @@ public class PriceDeductionController {
                             JSONObject resobj = new JSONObject(val);
                             Iterator it3 = resobj.keys();
                             while (it3.hasNext()) {
-                                String s3 = (String) it3.next();
-                                String val3 = resobj.optString(s3);
+                                String pricekey = (String) it3.next();
+                                String priceval = resobj.optString(pricekey);
 
-                                if (s3.equals("now")) {
+                                if (pricekey.equals("now")) {
                                     Map<String,String> m1 =null;
-                                    if(val3.startsWith("{")) {
-                                        m1 = UtilityFile.convertJsonToMap(val3);
+                                    if(priceval.startsWith("{")) {
+                                        m1 = UtilityFile.convertJsonToMap(priceval);
                                         if (m1 != null) {
                                             String to = m1.get("to");
                                             now=to;
                                         }
                                     }else{
-                                        now = val3;
+                                        now = priceval;
                                     }
                                 }
-                                if (s3.equals("was") && !val3.equals("")) {
+                                if (pricekey.equals("was") && !priceval.equals("")) {
                                     m.put("colorSwatches", colorList);
-                                    priceLabel.put("showWasNow", "Was £" + val3 + "," + " now £" + now);
+                                    priceLabel.put("showWasNow", "Was £" + priceval + "," + " now £" + now);
                                     // Since query param is not available
                                     /*priceLabel.put("showWasThenNow","");
                                     priceLabel.put("ShowPercDscount","");
@@ -113,7 +113,7 @@ public class PriceDeductionController {
                                     priceLabelList.add(priceLabel);
                                     m.put("nowPrice", now);
                                     m.put("priceLabel", priceLabelList);
-                                    m.put(key, val3);
+                                    m.put(key, priceval);
                                     prodList.add(m);
                                 }
                             }
