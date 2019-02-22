@@ -54,16 +54,16 @@ public class PriceDeductionController {
                     colorList = new ArrayList();
                     Iterator it1 = jsonObject.keys();
                     while (it1.hasNext()) {
-                        String s1 = (String) it1.next();
-                        String val = jsonObject.optString(s1);
+                        String key = (String) it1.next();
+                        String val = jsonObject.optString(key);
 
-                        if (s1.equals("productId")) {
+                        if (key.equals("productId")) {
                             m.put("productId", val);
                         }
-                        if (s1.equals("title")) {
+                        if (key.equals("title")) {
                             m.put("title", val);
                         }
-                        if (s1.equals("colorSwatches") && val.length() > 3) {
+                        if (key.equals("colorSwatches") && val.length() > 3) {
                             JSONArray jsonarray = new JSONArray(val);
 
                             for (int i = 0; i < jsonarray.length(); i++) {
@@ -83,7 +83,7 @@ public class PriceDeductionController {
                                 colorList.add(colorSwatchesObj);
                             }
                         }
-                        if (s1.equals("price")) {
+                        if (key.equals("price")) {
                             String now = "";
                             JSONObject resobj = new JSONObject(val);
                             Iterator it3 = resobj.keys();
@@ -113,7 +113,7 @@ public class PriceDeductionController {
                                     priceLabelList.add(priceLabel);
                                     m.put("nowPrice", now);
                                     m.put("priceLabel", priceLabelList);
-                                    m.put(s1, val3);
+                                    m.put(key, val3);
                                     prodList.add(m);
                                 }
                             }
