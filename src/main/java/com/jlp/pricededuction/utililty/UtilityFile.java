@@ -1,4 +1,4 @@
-package com.jlp.www.pricededuction.utililty;
+package com.jlp.pricededuction.utililty;
 
 import com.google.gson.Gson;
 
@@ -23,7 +23,7 @@ public class UtilityFile {
         colorMap.put("Purple","#808080");
         colorMap.put("Black","#000000");
         colorMap.put("Orange","#808080");
-        colorMap.put("Mimosa Yellow","#f5f5cc");
+        colorMap.put("Yellow","#f5f5cc");
 
         return colorMap;
     }
