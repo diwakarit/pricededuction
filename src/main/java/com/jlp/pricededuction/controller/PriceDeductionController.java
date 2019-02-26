@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.jlp.pricededuction.bean.*;
 import com.jlp.pricededuction.service.ReadJsonDataService;
 import com.jlp.pricededuction.utililty.UtilityFile;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Example controller for /api requests.
  */
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
-@Api(tags = "Internal Single Step APIs")
 @RestController
 public class PriceDeductionController {
     @Autowired
@@ -35,7 +31,6 @@ public class PriceDeductionController {
      * @return {@link ResponseEntity} a response reflecting the message sent.
      */
     @RequestMapping(value = "/api/readjson", produces = "application/json", method = RequestMethod.GET)
-    @ApiOperation(value = "Read Json")
     public ResponseEntity<String> readjsonurl() {
         String url = "https://jl-nonprod-syst.apigee.net/v1/categories/600001506/products?key=2ALHCAAs6ikGRBoy6eTHA58RaG097Fma";
         Map<String, Object> responseObj = new HashMap<String, Object>();
@@ -132,7 +127,6 @@ public class PriceDeductionController {
 
                 Collections.sort(prodList, UtilityFile.DESCENDING_COMPARATOR);
                 responseObj.put("products", prodList);
-                System.out.println(new Gson().toJson(responseObj));
                 msg = new Gson().toJson(responseObj);
 
             } else {
