@@ -1,6 +1,7 @@
 package com.jlp.pricededuction.utililty;
 
 import com.google.gson.Gson;
+import com.jlp.pricededuction.bean.Products;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,19 +29,15 @@ public class UtilityFile {
         return colorMap;
     }
 
-    public static <K, V extends Comparable<V>> Map<K, V> sortByValues(final Map<K, V> map) {
-        Comparator<K> valueComparator =  new Comparator<K>() {
-            public int compare(K k1, K k2) {
-                int compare = map.get(k2).compareTo(map.get(k1));
-                if (compare == 0) return 1;
-                else return compare;
-            }
-        };
-        Map<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
-        sortedByValues.putAll(map);
+    public static final Comparator<Products> DESCENDING_COMPARATOR = new Comparator<Products>() {
+        // Overriding the compare method to sort by price and nowprice
+        public int compare(Products p1, Products p2) {
 
-        return sortedByValues;
-    }
+            int diff1 = Math.round(Float.parseFloat(p1.getPrice())) - Math.round(Float.parseFloat(p1.getNowPrice()));
+            int diff2 = Math.round(Float.parseFloat(p2.getPrice())) - Math.round(Float.parseFloat(p2.getNowPrice()));
+            return diff1 > diff2? -1: 1;
+        }
+    };
 
     public static Map<String , String> convertJsonToMap(String strJson){
 

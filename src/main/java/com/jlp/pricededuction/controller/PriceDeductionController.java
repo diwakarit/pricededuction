@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Example controller for /api requests.
@@ -47,7 +48,7 @@ public class PriceDeductionController {
 
             if (json != null) {
                 jsonArray = json.getJSONArray("products");
-                List prodList = new ArrayList();
+                List<Products> prodList = new ArrayList<Products>();
                 List colorList = null;
                 for (int ja = 0; ja < jsonArray.length(); ja++) {
                     Products prod = new Products();
@@ -122,6 +123,7 @@ public class PriceDeductionController {
                                     priceLabelList.add(pLabel);
                                     prod.setNowPrice(now);
                                     prod.setPriceLabel(priceLabelList);
+
                                     prod.setPrice(priceval);
                                     prodList.add(prod);
                                 }
@@ -129,6 +131,8 @@ public class PriceDeductionController {
                         }
                     }
                 }
+
+                Collections.sort(prodList, UtilityFile.DESCENDING_COMPARATOR);
                 responseObj.put("products", prodList);
                 System.out.println(new Gson().toJson(responseObj));
                 msg = new Gson().toJson(responseObj);
