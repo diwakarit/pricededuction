@@ -7,6 +7,7 @@ import com.jlp.pricededuction.utililty.UtilityFile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,9 @@ public class PriceDeductionController {
     @Autowired
     private ReadJsonDataService readJsonDataService;
 
+    @Value("${url.jlp}")
+    private String url;
+
     /**
      * Controller to read json data.
      *
@@ -32,7 +36,6 @@ public class PriceDeductionController {
      */
     @RequestMapping(value = "/api/readjson", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<String> readjsonurl() {
-        String url = "https://jl-nonprod-syst.apigee.net/v1/categories/600001506/products?key=2ALHCAAs6ikGRBoy6eTHA58RaG097Fma";
         Map<String, Object> responseObj = new HashMap<String, Object>();
         String msg = "";
         try {
@@ -124,7 +127,6 @@ public class PriceDeductionController {
                         }
                     }
                 }
-
                 Collections.sort(prodList, UtilityFile.DESCENDING_COMPARATOR);
                 responseObj.put("products", prodList);
                 msg = new Gson().toJson(responseObj);

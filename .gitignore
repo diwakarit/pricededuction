@@ -1,11 +1,8 @@
 **/target/
-.DS_Store
 logs/
-
-#intellij
-.idea/
-**/target/
+.idea
 *.iml
+/bin/
 *.ipr
 *.iws
 

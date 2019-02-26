@@ -8,7 +8,7 @@
         <version>1.5.8.RELEASE</version>
     </parent>
     <artifactId>pricededuction</artifactId>
-    <groupId>com.expedia.www</groupId>
+    <groupId>com.expedia</groupId>
     <packaging>war</packaging>
     <name>pricededuction</name>
     <description>pricededuction SpringBoot application</description>
@@ -43,15 +43,6 @@
         <json-sanitizer.version>1.1</json-sanitizer.version>
         <lombok.version>1.16.18</lombok.version>
 
-        <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
-        <findbugs.include.filter.location>buildtools/findbugs/include.xml</findbugs.include.filter.location>
-        <findbugs.exclude.filter.location>buildtools/findbugs/exclude.xml</findbugs.exclude.filter.location>
-        <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
-
-        <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
-        <surefire.version>2.19.1</surefire.version>
-        <failsafe.version>2.19.1</failsafe.version>
-
         <!-- spring boot -->
         <debug.port>5000</debug.port>
         <run.jvmArguments>-Dspring.profiles.active=${run.spring.profiles.active}
@@ -68,8 +59,6 @@
             <artifactId>json</artifactId>
             <version>20090211</version>
         </dependency>
-
-
         <!-- Spring Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -185,36 +174,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <application.name>${run.application.name}</application.name>
-                        <application.home>${run.application.home}</application.home>
-                        <application.environment>${run.application.environment}</application.environment>
-                        <spring.profiles.active>${run.application.environment}</spring.profiles.active>
-                    </systemPropertyVariables>
-                    <includes>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${failsafe.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

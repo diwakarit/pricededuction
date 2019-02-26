@@ -4,10 +4,8 @@ spring:
   application:
     name: pricededuction
 
-server:
-  tomcat:
-    basedir: ${application.home}
-    max-threads: 1
-    access-log-enabled: true
-    access-log-pattern: "%t lbip=%h identd=%l user=%u status=%s method=%m url=%U bytes=%b duration=%D"
+url:
+  ljp: https://jl-nonprod-syst.apigee.net/v1/categories/600001506/products?key=2ALHCAAs6ikGRBoy6eTHA58RaG097Fma
+
+
 

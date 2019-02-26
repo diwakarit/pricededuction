@@ -6,8 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.net.URL;
+import java.util.Scanner;
 
 @Service
 public class ReadJsonDataServiceImpl implements ReadJsonDataService {
@@ -18,15 +18,9 @@ public class ReadJsonDataServiceImpl implements ReadJsonDataService {
     public JSONObject readJsonData(String url) {
 
         try {
-            URL strurl = new URL(url);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(strurl.openStream(),"iso-8859-1"), 8);
+           URL strUrl = new URL(url);
 
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            json = sb.toString();
+           json = new Scanner(strUrl.openStream(), "UTF-8").useDelimiter("\\A").next();
 
         } catch (Exception e) {
            System.out.println(e.toString());
