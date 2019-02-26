@@ -1,9 +1,7 @@
 package com.jlp.pricededuction.controller;
 
 import com.google.gson.Gson;
-import com.jlp.pricededuction.bean.ColorSwatches;
-import com.jlp.pricededuction.bean.PriceLabel;
-import com.jlp.pricededuction.bean.Products;
+import com.jlp.pricededuction.bean.*;
 import com.jlp.pricededuction.service.ReadJsonDataService;
 import com.jlp.pricededuction.utililty.UtilityFile;
 import io.swagger.annotations.Api;
