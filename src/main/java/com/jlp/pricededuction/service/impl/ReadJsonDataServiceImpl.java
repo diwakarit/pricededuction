@@ -14,7 +14,10 @@ public class ReadJsonDataServiceImpl implements ReadJsonDataService {
 
     static JSONObject jObj = null;
     static String json = "";
-
+    /**
+     * @param url the first {@code string }
+     * @return JSONObject
+     */
     public JSONObject readJsonData(String url) {
 
         try {
@@ -23,17 +26,14 @@ public class ReadJsonDataServiceImpl implements ReadJsonDataService {
         } catch (Exception e) {
            System.out.println(e.toString());
         }
-
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);
         } catch (JSONException e) {
             System.out.println("error on parse data");
         }
-
         // return JSON String
         return jObj;
-
     }
 }
 

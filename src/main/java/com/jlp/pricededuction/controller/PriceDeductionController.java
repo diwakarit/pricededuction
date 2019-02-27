@@ -46,6 +46,7 @@ public class PriceDeductionController {
                 jsonArray = json.getJSONArray("products");
                 List<Products> prodList = new ArrayList<Products>();
                 List colorList = null;
+
                 for (int ja = 0; ja < jsonArray.length(); ja++) {
                     Products prod = new Products();
                     PriceLabel pLabel = new PriceLabel();

@@ -8,7 +8,7 @@
         <version>1.5.8.RELEASE</version>
     </parent>
     <artifactId>pricededuction</artifactId>
-    <groupId>com.expedia</groupId>
+    <groupId>com.pricededuction</groupId>
     <packaging>war</packaging>
     <name>pricededuction</name>
     <description>pricededuction SpringBoot application</description>
@@ -26,7 +26,7 @@
         <run.application.environment>dev</run.application.environment>
         <run.spring.profiles.active>${run.application.environment}</run.spring.profiles.active>
 
-        <start-class>com.expedia.www.pricededuction.Starter</start-class>
+        <start-class>com.jlp.pricededuction.Starter</start-class>
 
         <!-- Following properties are for release. -->
         <buildType>sandbox</buildType>

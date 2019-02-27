@@ -1,6 +1,5 @@
 
-Current Status: Under Development
-
+Read provided url and parse it and based of conditions created new json output.
 
 Service Endpoints
 
