@@ -18,9 +18,7 @@ public class ReadJsonDataServiceImpl implements ReadJsonDataService {
     public JSONObject readJsonData(String url) {
 
         try {
-           URL strUrl = new URL(url);
-
-           json = new Scanner(strUrl.openStream(), "UTF-8").useDelimiter("\\A").next();
+           json = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
 
         } catch (Exception e) {
            System.out.println(e.toString());

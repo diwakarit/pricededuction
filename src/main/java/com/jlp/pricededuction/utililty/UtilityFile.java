@@ -28,16 +28,14 @@ public class UtilityFile {
 
         return colorMap;
     }
+        /**** Lambda Expression from Java8 ****/
+        public static final Comparator<Products> DESCENDING_COMPARATOR = (prod1, prod2) -> {
 
-    public static final Comparator<Products> DESCENDING_COMPARATOR = new Comparator<Products>() {
-        // Overriding the compare method to sort by price and nowprice
-        public int compare(Products p1, Products p2) {
+            int discount1 = Math.round(Float.parseFloat(prod1.getPrice())) - Math.round(Float.parseFloat(prod1.getNowPrice()));
+            int discount2 = Math.round(Float.parseFloat(prod2.getPrice())) - Math.round(Float.parseFloat(prod2.getNowPrice()));
+            return discount1 > discount2 ? -1: 1;
+        };
 
-            int diff1 = Math.round(Float.parseFloat(p1.getPrice())) - Math.round(Float.parseFloat(p1.getNowPrice()));
-            int diff2 = Math.round(Float.parseFloat(p2.getPrice())) - Math.round(Float.parseFloat(p2.getNowPrice()));
-            return diff1 > diff2? -1: 1;
-        }
-    };
 
     public static Map<String , String> convertJsonToMap(String strJson){
 

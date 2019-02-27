@@ -54,9 +54,10 @@ public class PriceDeductionController {
                     HashMap m = new HashMap();
                     List priceLabelList = new ArrayList();
                     colorList = new ArrayList();
-                    Iterator it1 = jsonObject.keys();
-                    while (it1.hasNext()) {
-                        String key = (String) it1.next();
+                    Iterator it = jsonObject.keys();
+
+                    while (it.hasNext()) {
+                        String key = (String) it.next();
                         String val = jsonObject.optString(key);
 
                         if (key.equals("productId")) {
