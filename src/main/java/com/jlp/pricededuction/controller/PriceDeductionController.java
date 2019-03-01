@@ -1,7 +1,9 @@
 package com.jlp.pricededuction.controller;
 
 import com.google.gson.Gson;
-import com.jlp.pricededuction.bean.*;
+import com.jlp.pricededuction.bean.ColorSwatches;
+import com.jlp.pricededuction.bean.PriceLabel;
+import com.jlp.pricededuction.bean.Products;
 import com.jlp.pricededuction.service.ReadJsonDataService;
 import com.jlp.pricededuction.utililty.UtilityFile;
 import org.json.JSONArray;
@@ -45,20 +47,18 @@ public class PriceDeductionController {
             if (json != null) {
                 jsonArray = json.getJSONArray("products");
                 List<Products> prodList = new ArrayList<Products>();
-                List colorList = null;
 
-                for (int ja = 0; ja < jsonArray.length(); ja++) {
+                jsonArray.forEach(item -> {
+                    JSONObject jsonObject = (JSONObject) item;
                     Products prod = new Products();
                     PriceLabel pLabel = new PriceLabel();
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(ja);
                     HashMap m = new HashMap();
                     List priceLabelList = new ArrayList();
-                    colorList = new ArrayList();
-                    Iterator it = jsonObject.keys();
+                    final List colorList = new ArrayList();
 
-                    while (it.hasNext()) {
-                        String key = (String) it.next();
+                    jsonObject.keys().forEachRemaining(key ->
+                    {
                         String val = jsonObject.optString(key);
 
                         if (key.equals("productId")) {
@@ -97,14 +97,14 @@ public class PriceDeductionController {
                                 String priceval = resobj.optString(pricekey);
 
                                 if (pricekey.equals("now")) {
-                                    Map<String,String> m1 =null;
-                                    if(priceval.startsWith("{")) {
+                                    Map<String, String> m1 = null;
+                                    if (priceval.startsWith("{")) {
                                         m1 = UtilityFile.convertJsonToMap(priceval);
                                         if (m1 != null) {
                                             String to = m1.get("to");
-                                            now=to;
+                                            now = to;
                                         }
-                                    }else{
+                                    } else {
                                         now = priceval;
                                     }
                                 }
@@ -127,8 +127,9 @@ public class PriceDeductionController {
                                 }
                             }
                         }
-                    }
-                }
+
+                    });
+                });
                 Collections.sort(prodList, UtilityFile.DESCENDING_COMPARATOR);
                 responseObj.put("products", prodList);
                 msg = new Gson().toJson(responseObj);

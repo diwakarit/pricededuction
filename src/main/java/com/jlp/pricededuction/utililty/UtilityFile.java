@@ -6,19 +6,13 @@ import com.jlp.pricededuction.bean.Products;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class UtilityFile {
 
-    // No arguements constructor created
     private UtilityFile() {
 
     }
 
-    /**
-     * Created HashMap to store Color as a key and RGB as a value
-     * @return map
-     */
     public static HashMap<String,String> basicColorToRGB(){
 
         HashMap<String,String> colorMap = new HashMap<>();
@@ -33,13 +27,7 @@ public class UtilityFile {
 
         return colorMap;
     }
-        /*
-         * Lambda Expression from Java8
-         *
-         * @param  prod1 the first {@code int} to compare
-         * @param  prod2  the second {@code int} to compare
-         * @return based of price and nowprice
-        */
+
         public static final Comparator<Products> DESCENDING_COMPARATOR = (prod1, prod2) -> {
 
             int discount1 = Math.round(Float.parseFloat(prod1.getPrice())) - Math.round(Float.parseFloat(prod1.getNowPrice()));
@@ -47,10 +35,6 @@ public class UtilityFile {
             return discount1 > discount2 ? -1: 1;
         };
 
-     /*
-      *
-      * @return json to map
-     */
     public static Map<String , String> convertJsonToMap(String strJson){
 
         return new Gson().fromJson(strJson,Map.class);
