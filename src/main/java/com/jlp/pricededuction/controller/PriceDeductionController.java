@@ -12,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Example controller for /api requests.
@@ -36,8 +40,8 @@ public class PriceDeductionController {
      *
      * @return {@link ResponseEntity} a response reflecting the message sent.
      */
-    @RequestMapping(value = "/api/readjson", produces = "application/json", method = RequestMethod.GET)
-    public ResponseEntity<String> readjsonurl() {
+    @RequestMapping(value = "/api/priceReductionList", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<String> readjsonurl(@RequestParam("labelType") String labelType) {
         Map<String, Object> responseObj = new HashMap<String, Object>();
         String msg = "";
         try {
@@ -47,6 +51,7 @@ public class PriceDeductionController {
             if (json != null) {
                 jsonArray = json.getJSONArray("products");
                 List<Products> prodList = new ArrayList<Products>();
+
 
                 jsonArray.forEach(item -> {
                     JSONObject jsonObject = (JSONObject) item;
@@ -95,13 +100,14 @@ public class PriceDeductionController {
                             while (it3.hasNext()) {
                                 String pricekey = (String) it3.next();
                                 String priceval = resobj.optString(pricekey);
-
+                                String then="";
                                 if (pricekey.equals("now")) {
                                     Map<String, String> m1 = null;
                                     if (priceval.startsWith("{")) {
                                         m1 = UtilityFile.convertJsonToMap(priceval);
                                         if (m1 != null) {
                                             String to = m1.get("to");
+                                            then = m1.get("then");
                                             now = to;
                                         }
                                     } else {
@@ -109,15 +115,21 @@ public class PriceDeductionController {
                                     }
                                 }
                                 if (pricekey.equals("was") && !priceval.equals("")) {
-
                                     prod.setColorSwatches(colorList);
-                                    pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
-
-                                    // Since query param is not available
-                                    /*priceLabel.put("showWasThenNow","");
-                                    priceLabel.put("ShowPercDscount","");
-                                     */
-
+                                    if (!StringUtils.isEmpty(labelType)){
+                                        if(labelType.equals("ShowPercDscount")){
+                                            int discount = Math.round(Float.parseFloat(priceval)) - Math.round(Float.parseFloat(now));
+                                            int percent = discount*100/Math.round(Float.parseFloat(priceval));
+                                            pLabel.setShowPercDscount(percent+"% off - now £"+now);
+                                        }
+                                        else if(labelType.equals("ShowWasThenNow")){
+                                            pLabel.setShowWasThenNow("was £"+priceval+",then£"+ then+", now £"+now);
+                                        }else{
+                                            pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
+                                        }
+                                    }else {
+                                        pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
+                                    }
                                     priceLabelList.add(pLabel);
                                     prod.setNowPrice(now);
                                     prod.setPriceLabel(priceLabelList);

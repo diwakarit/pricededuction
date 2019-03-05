@@ -16,4 +16,6 @@ import java.io.Serializable;
 @JsonSerialize
 public class PriceLabel implements Serializable{
     private String showWasNow;
+    private String ShowWasThenNow;
+    private String ShowPercDscount;
 }
