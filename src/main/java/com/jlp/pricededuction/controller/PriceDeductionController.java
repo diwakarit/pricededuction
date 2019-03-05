@@ -40,7 +40,7 @@ public class PriceDeductionController {
      *
      * @return {@link ResponseEntity} a response reflecting the message sent.
      */
-    @RequestMapping(value = "/api/priceReductionList", produces = "application/json", method = RequestMethod.GET)
+    @RequestMapping(value = "/priceReductionList", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<String> readjsonurl(@RequestParam("labelType") String labelType) {
         Map<String, Object> responseObj = new HashMap<String, Object>();
         String msg = "";

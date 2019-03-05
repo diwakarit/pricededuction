@@ -1,5 +1,3 @@
-# Project Name
-  pricededuction
    
 # Overview
 
@@ -24,8 +22,16 @@ Run the below command to start the application once "Build Successful" message i
 mvn spring-boot:run
 ```
 
-## Service Endpoints
+## Execution URLs:
 
-Open a browser and hit [http://localhost:8080/api/readjson](http://localhost:8080/)
+    Generic URL: http://localhost:8080/priceReductionList?labelType={labelType}
 
+
+    Specific:
+
+      - http://localhost:8080/priceReductionList?labelType=ShowWasNow
+
+      - http://localhost:8080/priceReductionList?labelType=ShowWasThenNow
+
+      - http://localhost:8080/priceReductionList?labelType=ShowPercDscount
 
