@@ -3,23 +3,25 @@
    
 # Overview
 
-Read provided url and parse it and based on conditions created new json output.
+To retrieve the Product List which has the valid price reductions in a category using multiple usecases
+### Requirements:
 
-### Local development prerequisite:
+* Oracle Java Runtime 1.8 or higher
+* Maven 3.5.0
+* Eclipse / IntelliJ
 
-* Make sure you have Java Version 1.8
-* Make sure you have Maven 3.5.0
-
-### How to build?
+### To Build the application
+You don’t need to build from source to use Spring Boot (binaries in repo.spring.io), but if you want to try out the latest and greatest, Spring Boot can be easily built with the maven wrapper. You also need JDK 1.8.
 
 ```
 mvn clean install
 ```
 
-### How to build and run?
+### To Run the application
+Run the below command to start the application once "Build Successful" message is displayed
 
 ```
-mvn clean install;java -Dapplication.environment=dev -Dapplication.home=. -Dspring.profiles.active=dev -jar ./target/*.war
+mvn spring-boot:run
 ```
 
 ## Service Endpoints
