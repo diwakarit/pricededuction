@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
-import static java.util.Objects.nonNull;
 
 /**
  * Example controller for /api requests.
@@ -46,25 +45,23 @@ public class PriceDeductionController {
         String msg = "";
         try {
             JSONObject json = readJsonDataService.readJsonData(url);
-            JSONArray jsonArray = null;
+            JSONArray jsonArray;
 
             if (json != null) {
                 jsonArray = json.getJSONArray("products");
                 List<Products> prodList = new ArrayList<Products>();
 
-
                 jsonArray.forEach(item -> {
                     JSONObject jsonObject = (JSONObject) item;
                     Products prod = new Products();
                     PriceLabel pLabel = new PriceLabel();
-
-                    HashMap m = new HashMap();
                     List priceLabelList = new ArrayList();
                     final List colorList = new ArrayList();
 
                     jsonObject.keys().forEachRemaining(key ->
                     {
                         String val = jsonObject.optString(key);
+                        String then="";
 
                         if (key.equals("productId")) {
                             prod.setProductId(val);
@@ -100,14 +97,17 @@ public class PriceDeductionController {
                             while (it3.hasNext()) {
                                 String pricekey = (String) it3.next();
                                 String priceval = resobj.optString(pricekey);
-                                String then="";
+                                if(pricekey.equals("then2") && !priceval.equals("")){
+                                    then = priceval;
+                                }else if(pricekey.equals("then1") && !priceval.equals("")){
+                                    then = priceval;
+                                }
                                 if (pricekey.equals("now")) {
                                     Map<String, String> m1 = null;
                                     if (priceval.startsWith("{")) {
                                         m1 = UtilityFile.convertJsonToMap(priceval);
                                         if (m1 != null) {
                                             String to = m1.get("to");
-                                            then = m1.get("then");
                                             now = to;
                                         }
                                     } else {
@@ -123,9 +123,13 @@ public class PriceDeductionController {
                                             pLabel.setShowPercDscount(percent+"% off - now £"+now);
                                         }
                                         else if(labelType.equals("ShowWasThenNow")){
-                                            pLabel.setShowWasThenNow("was £"+priceval+",then£"+ then+", now £"+now);
+                                            if(!then.equals("")){
+                                                pLabel.setShowWasThenNow("was £"+priceval+", then £"+ then+", now £"+now);
+                                            }else{
+                                                pLabel.setShowWasThenNow("was £"+priceval+", now £"+now);
+                                            }
                                         }else{
-                                            pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
+                                            pLabel.setShowWasNow("Was £" + priceval + ", now £" + now);
                                         }
                                     }else {
                                         pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
