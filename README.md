@@ -12,7 +12,7 @@ To retrieve the Product List which has the valid price reductions in a category 
 You don’t need to build from source to use Spring Boot (binaries in repo.spring.io), but if you want to try out the latest and greatest, Spring Boot can be easily built with the maven wrapper. You also need JDK 1.8.
 
 ```
-mvn clean install
+./mvnw clean install
 ```
 
 ### To Run the application
