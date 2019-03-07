@@ -57,11 +57,10 @@ public class PriceDeductionController {
                     PriceLabel pLabel = new PriceLabel();
                     List priceLabelList = new ArrayList();
                     final List colorList = new ArrayList();
-
                     jsonObject.keys().forEachRemaining(key ->
                     {
                         String val = jsonObject.optString(key);
-                        String then="";
+                        final String[] then = {null};
 
                         if (key.equals("productId")) {
                             prod.setProductId(val);
@@ -72,13 +71,12 @@ public class PriceDeductionController {
                         if (key.equals("colorSwatches") && val.length() > 3) {
                             JSONArray jsonarray = new JSONArray(val);
 
-                            for (int i = 0; i < jsonarray.length(); i++) {
+                            jsonarray.forEach(coloritem -> {
+                                JSONObject colorJsonObject = (JSONObject) coloritem;
                                 ColorSwatches swatches = new ColorSwatches();
-
-                                JSONObject jsonobject = jsonarray.getJSONObject(i);
-                                String strSkuId = jsonobject.getString("skuId");
-                                String strColor = jsonobject.getString("color");
-                                String basicColor = jsonobject.getString("basicColor");
+                                String strSkuId = colorJsonObject.getString("skuId");
+                                String strColor = colorJsonObject.getString("color");
+                                String basicColor = colorJsonObject.getString("basicColor");
 
                                 if (strColor != null) {
                                     swatches.setColor(strColor);
@@ -88,19 +86,18 @@ public class PriceDeductionController {
                                     swatches.setSkuId(strSkuId);
                                 }
                                 colorList.add(swatches);
-                            }
+                            });
                         }
                         if (key.equals("price")) {
-                            String now = "";
+                           final String[] now = {null};
                             JSONObject resobj = new JSONObject(val);
-                            Iterator it3 = resobj.keys();
-                            while (it3.hasNext()) {
-                                String pricekey = (String) it3.next();
+                            resobj.keys().forEachRemaining(pricekey ->
+                            {
                                 String priceval = resobj.optString(pricekey);
                                 if(pricekey.equals("then2") && !priceval.equals("")){
-                                    then = priceval;
+                                    then[0] = priceval;
                                 }else if(pricekey.equals("then1") && !priceval.equals("")){
-                                    then = priceval;
+                                     then[0] = priceval;
                                 }
                                 if (pricekey.equals("now")) {
                                     Map<String, String> m1 = null;
@@ -108,40 +105,40 @@ public class PriceDeductionController {
                                         m1 = UtilityFile.convertJsonToMap(priceval);
                                         if (m1 != null) {
                                             String to = m1.get("to");
-                                            now = to;
+                                            now[0] = to;
                                         }
                                     } else {
-                                        now = priceval;
+                                        now[0] = priceval;
                                     }
                                 }
                                 if (pricekey.equals("was") && !priceval.equals("")) {
                                     prod.setColorSwatches(colorList);
                                     if (!StringUtils.isEmpty(labelType)){
                                         if(labelType.equals("ShowPercDscount")){
-                                            int discount = Math.round(Float.parseFloat(priceval)) - Math.round(Float.parseFloat(now));
+                                            int discount = Math.round(Float.parseFloat(priceval)) - Math.round(Float.parseFloat(now[0]));
                                             int percent = discount*100/Math.round(Float.parseFloat(priceval));
-                                            pLabel.setShowPercDscount(percent+"% off - now £"+now);
+                                            pLabel.setShowPercDscount(percent+"% off - now £"+now[0]);
                                         }
                                         else if(labelType.equals("ShowWasThenNow")){
-                                            if(!then.equals("")){
-                                                pLabel.setShowWasThenNow("was £"+priceval+", then £"+ then+", now £"+now);
+                                            if(!StringUtils.isEmpty(then[0])){
+                                                pLabel.setShowWasThenNow("was £"+priceval+", then £"+ then[0]+", now £"+now[0]);
                                             }else{
-                                                pLabel.setShowWasThenNow("was £"+priceval+", now £"+now);
+                                                pLabel.setShowWasThenNow("was £"+priceval+", now £"+now[0]);
                                             }
                                         }else{
-                                            pLabel.setShowWasNow("Was £" + priceval + ", now £" + now);
+                                            pLabel.setShowWasNow("Was £" + priceval + ", now £" + now[0]);
                                         }
                                     }else {
-                                        pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now);
+                                        pLabel.setShowWasNow("Was £" + priceval + "," + " now £" + now[0]);
                                     }
                                     priceLabelList.add(pLabel);
-                                    prod.setNowPrice(now);
+                                    prod.setNowPrice(now[0]);
                                     prod.setPriceLabel(priceLabelList);
 
                                     prod.setPrice(priceval);
                                     prodList.add(prod);
                                 }
-                            }
+                            });
                         }
 
                     });
