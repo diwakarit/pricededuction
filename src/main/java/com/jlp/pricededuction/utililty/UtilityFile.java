@@ -1,24 +1,17 @@
 package com.jlp.pricededuction.utililty;
 
-import com.google.gson.Gson;
 import com.jlp.pricededuction.bean.ColorSwatches;
 import com.jlp.pricededuction.bean.PriceLabel;
 import com.jlp.pricededuction.bean.Products;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UtilityFile {
 
     private UtilityFile() {
 
     }
-
     public static HashMap<String,String> basicColorToRGB(){
 
         HashMap<String,String> colorMap = new HashMap<>();
@@ -36,24 +29,18 @@ public class UtilityFile {
 
         public static final Comparator<Products> DESCENDING_COMPARATOR = (prod1, prod2) -> {
 
-            int discount1 = Math.round(Float.parseFloat(prod1.getPrice())) - Math.round(Float.parseFloat(prod1.getNowPrice()));
-            int discount2 = Math.round(Float.parseFloat(prod2.getPrice())) - Math.round(Float.parseFloat(prod2.getNowPrice()));
+            int discount1 = Math.round(Float.parseFloat(prod1.getPrice().toString())) - Math.round(Float.parseFloat(prod1.getNowPrice()));
+            int discount2 = Math.round(Float.parseFloat(prod2.getPrice().toString())) - Math.round(Float.parseFloat(prod2.getNowPrice()));
             return discount1 > discount2 ? -1: 1;
         };
 
-    public static Map<String , String> convertJsonToMap(String strJson){
+    public static void setColorSwatchesList(ArrayList< ColorSwatches > colorSwatches, List colorList){
 
-        return new Gson().fromJson(strJson,Map.class);
-    }
-
-    public static void getColorSwatchesList(JSONArray jsonArray, List colorList){
-
-        jsonArray.forEach(coloritem -> {
-            JSONObject colorJsonObject = (JSONObject) coloritem;
+        colorSwatches.forEach(coloritem -> {
             ColorSwatches swatches = new ColorSwatches();
-            String strSkuId = colorJsonObject.getString("skuId");
-            String strColor = colorJsonObject.getString("color");
-            String basicColor = colorJsonObject.getString("basicColor");
+            String strSkuId = coloritem.getSkuId();
+            String strColor = coloritem.getColor();
+            String basicColor = coloritem.getBasicColor();
 
             if (strColor != null) {
                 swatches.setColor(strColor);
@@ -64,7 +51,6 @@ public class UtilityFile {
             }
             colorList.add(swatches);
         });
-
     }
 
     public static void setByLabelType(String labelType,String[] then,String[] now,String priceval,PriceLabel pLabel){

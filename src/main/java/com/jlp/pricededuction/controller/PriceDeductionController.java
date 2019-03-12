@@ -1,11 +1,11 @@
 package com.jlp.pricededuction.controller;
 
+
 import com.google.gson.Gson;
+import com.jlp.pricededuction.bean.ProductLists;
 import com.jlp.pricededuction.bean.Products;
 import com.jlp.pricededuction.service.ReadJsonDataService;
 import com.jlp.pricededuction.utililty.UtilityFile;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,20 +27,18 @@ public class PriceDeductionController {
     private String url;
 
     /**
-     * Controller to read json data.
+     * Controller to read products.
      *
-     * @return {@link ResponseEntity} a response reflecting the message sent.
+     * @return {@link ResponseEntity} a response reflecting the new products lists.
      */
     @RequestMapping(value = "/priceReductionList", produces = "application/json", method = RequestMethod.GET)
-    public ResponseEntity<String> readjsonurl(@RequestParam("labelType") String labelType) {
+    public ResponseEntity<String> priceReductionList(@RequestParam("labelType") String labelType) {
         Map<String, Object> responseObj = new HashMap<String, Object>();
         String msg = "";
         try {
-            JSONObject json = readJsonDataService.readJsonData(url);
-            JSONArray jsonArray;
+            ProductLists json = readJsonDataService.readProductData(url);
             if (json != null) {
-                jsonArray = json.getJSONArray("products");
-                List<Products> prodList = readJsonDataService.getProductsList(jsonArray, labelType);
+                List<Products> prodList = readJsonDataService.getProductsList(json, labelType);
 
                 Collections.sort(prodList, UtilityFile.DESCENDING_COMPARATOR);
                 responseObj.put("products", prodList);

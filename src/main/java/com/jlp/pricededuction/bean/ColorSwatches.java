@@ -18,4 +18,5 @@ public class ColorSwatches implements Serializable{
     private String color;
     private String rgbcolor;
     private String skuId;
+    private String basicColor;
 }
